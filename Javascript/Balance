@@ -1,0 +1,41 @@
+// This function analyzes the balance sheet and returns a recommendation
+function analyzeBalanceSheet(balanceSheet) {
+  // First, we'll extract the relevant data from the balance sheet
+
+  // Total assets
+  const totalAssets = balanceSheet.totalAssets;
+
+  // Total liabilities
+  const totalLiabilities = balanceSheet.totalLiabilities;
+
+  // Total equity
+  const totalEquity = balanceSheet.totalEquity;
+
+  // Now, we'll use this data to calculate some ratios that can help us determine the strength of the balance sheet
+
+  // Debt to equity ratio
+  const debtToEquityRatio = totalLiabilities / totalEquity;
+
+  // Asset to equity ratio
+  const assetToEquityRatio = totalAssets / totalEquity;
+
+  // Based on these ratios, we can determine whether the balance sheet is a strong buy or sell
+
+  if (debtToEquityRatio < 1 && assetToEquityRatio > 1) {
+    // If the debt to equity ratio is less than 1 and the asset to equity ratio is greater than 1, then the balance sheet is a strong buy
+    return "BUY";
+  } else {
+    // Otherwise, the balance sheet is a sell
+    return "SELL";
+  }
+}
+
+// Now, we can use this function in our Chrome extension
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.type === "analyzeBalanceSheet") {
+    // If the message is requesting that we analyze the balance sheet, then we'll call our function and send the result back to the sender
+    const recommendation = analyzeBalanceSheet(message.balanceSheet);
+    sendResponse({ recommendation: recommendation });
+  }
+});
